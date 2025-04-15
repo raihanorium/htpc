@@ -1,0 +1,22 @@
+- name: Install Deluge
+  kubernetes.core.helm:
+    release_namespace: "{{ app_namespace }}"
+    create_namespace: true
+    name: deluge
+    state: present
+    chart_ref: deluge
+    chart_repo_url: https://geek-cookbook.github.io/charts/
+    chart_version: 5.4.2
+    values:
+      ingress:
+        main:
+          enabled: true
+          ingressClassName: nginx
+          hosts:
+            - host: deluge.server.me
+              paths:
+                - path: /
+                  pathType: ImplementationSpecific
+                  backend:
+                    serviceName: deluge
+                    servicePort: 8112

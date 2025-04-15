@@ -1,0 +1,13 @@
+- name: Install HTPC apps
+  hosts: cluster_nodes
+  vars:
+    app_namespace: htpc
+  roles:
+    - role: volumes
+    - role: helm
+    - role: deluge
+      vars:
+        task: install
+    - role: jellyfin
+      vars:
+        task: install

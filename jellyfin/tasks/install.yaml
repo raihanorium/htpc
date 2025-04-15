@@ -1,0 +1,20 @@
+- name: Install Jellyfin
+  kubernetes.core.helm:
+    release_namespace: "{{ app_namespace }}"
+    create_namespace: true
+    name: jellyfin
+    state: present
+    chart_ref: jellyfin
+    chart_repo_url: https://djjudas21.github.io/charts/
+    chart_version: 3.2.7
+    values:
+      ingress:
+        enabled: true
+        ingressClassName: nginx
+        hostname: jellyfin.server.me
+        tls: false
+      persistence:
+        media:
+          enabled: true
+          existingClaim: htpc-shared-pvc
+          mountPath: /media

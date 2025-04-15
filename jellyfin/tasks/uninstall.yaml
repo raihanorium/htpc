@@ -1,0 +1,6 @@
+- name: Uninstall Jellyfin
+  kubernetes.core.helm:
+    release_namespace: "{{ app_namespace }}"
+    name: jellyfin
+    state: absent
+    wait: true

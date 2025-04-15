@@ -1,0 +1,6 @@
+- name: Uninstall Deluge
+  kubernetes.core.helm:
+    release_namespace: "{{ app_namespace }}"
+    name: deluge
+    state: absent
+    wait: true

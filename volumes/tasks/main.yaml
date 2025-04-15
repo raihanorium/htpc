@@ -1,0 +1,25 @@
+- name: Create virtualenv for k8s libs
+  ansible.builtin.pip:
+    name: kubernetes
+    virtualenv: /opt/ansible-venv
+    virtualenv_python: python3
+
+- name: Install Kubernetes Python client
+  pip:
+    name: kubernetes
+- name: Create shared PVC for Deluge and Jellyfin
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ app_namespace }}"
+    definition:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: htpc-shared-pvc
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 50Gi
+        storageClassName: nfs-client
