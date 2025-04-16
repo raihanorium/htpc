@@ -13,8 +13,14 @@
         ingressClassName: nginx
         hostname: jellyfin.server.me
         tls: false
-      persistence:
-        media:
-          enabled: true
-          existingClaim: htpc-shared-pvc
-          mountPath: /media
+      jellyfin:
+        mediaVolumes:
+          - name: movies
+            readOnly: false
+            existingClaim: htpc-shared-pvc
+#            volumeSpec:
+#              capacity:
+#                storage: 5Gi
+#              accessModes:
+#                - ReadWriteOnce
+#              storageClassName: local-path
