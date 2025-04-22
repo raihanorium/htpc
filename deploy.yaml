@@ -2,6 +2,7 @@
   hosts: cluster_nodes
   vars:
     app_namespace: htpc
+    shared_pvc_name: htpc-shared-pvc
   roles:
     - role: volumes
     - role: helm

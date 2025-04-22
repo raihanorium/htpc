@@ -5,8 +5,8 @@
     name: deluge
     state: present
     chart_ref: deluge
-    chart_repo_url: https://geek-cookbook.github.io/charts/
-    chart_version: 5.4.2
+    chart_repo_url: https://lib42.github.io/charts
+    chart_version: 1.3.0
     values:
       ingress:
         main:
@@ -20,3 +20,12 @@
                   backend:
                     serviceName: deluge
                     servicePort: 8112
+      persistence:
+        config:
+          enabled: true
+          mountPath: /config
+          size: 10M
+        downloads:
+          enabled: true
+          existingClaim: "{{ shared_pvc_name }}"
+          mountPath: /downloads

@@ -12,7 +12,7 @@
       apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-        name: htpc-shared-pvc
+        name: "{{ shared_pvc_name }}"
       spec:
         accessModes:
           - ReadWriteOnce

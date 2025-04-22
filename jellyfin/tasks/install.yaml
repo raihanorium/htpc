@@ -17,10 +17,4 @@
         mediaVolumes:
           - name: movies
             readOnly: false
-            existingClaim: htpc-shared-pvc
-#            volumeSpec:
-#              capacity:
-#                storage: 5Gi
-#              accessModes:
-#                - ReadWriteOnce
-#              storageClassName: local-path
+            existingClaim: "{{ shared_pvc_name }}"
