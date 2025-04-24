@@ -4,6 +4,25 @@
     kind: Namespace
     name: "{{ app_namespace }}"
 
+- name: Create PersistentVolume for shared PVC
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ app_namespace }}"
+    definition:
+      apiVersion: v1
+      kind: PersistentVolume
+      metadata:
+        name: "{{ shared_pvc_name }}-pv"
+      spec:
+        capacity:
+          storage: 50Gi
+        accessModes:
+          - ReadWriteOnce
+        persistentVolumeReclaimPolicy: Retain
+        storageClassName: local-path
+        hostPath:
+          path: /home/raihan/media
+
 - name: Create shared PVC for Deluge and Jellyfin
   kubernetes.core.k8s:
     state: present
@@ -18,5 +37,6 @@
           - ReadWriteOnce
         resources:
           requests:
-            storage: 5Gi
+            storage: 50Gi
         storageClassName: local-path
+        volumeName: "{{ shared_pvc_name }}-pv"

@@ -8,13 +8,10 @@
     chart_repo_url: https://djjudas21.github.io/charts/
     chart_version: 3.2.7
     values:
-      ingress:
-        enabled: true
-        ingressClassName: nginx
-        hostname: jellyfin.server.me
-        tls: false
+      service:
+        type: LoadBalancer
       jellyfin:
         mediaVolumes:
-          - name: movies
+          - name: tutorials
             readOnly: false
             existingClaim: "{{ shared_pvc_name }}"
