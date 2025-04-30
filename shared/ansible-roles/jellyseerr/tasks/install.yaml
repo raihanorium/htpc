@@ -1,0 +1,12 @@
+- name: Install jellyseerr
+  kubernetes.core.helm:
+    release_namespace: "{{ app_namespace }}"
+    create_namespace: true
+    name: jellyseerr
+    state: present
+    chart_ref: jellyseerr
+    chart_repo_url: https://bubylou.github.io/Arr-Stack
+    chart_version: 0.2.5
+    values:
+      service:
+        type: LoadBalancer

@@ -1,0 +1,6 @@
+- name: Uninstall jellyseerr
+  kubernetes.core.helm:
+    release_namespace: "{{ app_namespace }}"
+    name: jellyseerr
+    state: absent
+    wait: true

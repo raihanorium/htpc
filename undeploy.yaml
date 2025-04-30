@@ -10,6 +10,15 @@
     - role: jellyfin
       vars:
         task: uninstall
+    - role: jellyseerr
+      vars:
+        task: uninstall
+    - role: radarr
+      vars:
+        task: uninstall
+    - role: jackett
+      vars:
+        task: uninstall
   tasks:
     - name: Delete HTPC namespace
       kubernetes.core.k8s:

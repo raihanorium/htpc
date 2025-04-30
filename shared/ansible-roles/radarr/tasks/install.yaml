@@ -1,0 +1,26 @@
+- name: Install radarr
+  kubernetes.core.helm:
+    release_namespace: "{{ app_namespace }}"
+    create_namespace: true
+    name: radarr
+    state: present
+    chart_ref: radarr
+    chart_repo_url: https://charts.pree.dev
+    chart_version: 1.17.0
+    values:
+      service:
+        main:
+          type: LoadBalancer
+      persistence:
+        config:
+          enabled: true
+          mountPath: /config
+        media:
+          enabled: true
+          existingClaim: "{{ shared_pvc_name }}"
+          mountPath: /media-library
+          readOnly: false
+          accessMode: ReadWriteOnce
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000

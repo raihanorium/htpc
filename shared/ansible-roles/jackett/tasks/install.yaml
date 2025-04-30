@@ -1,0 +1,9 @@
+- name: Install jackett
+  kubernetes.core.helm:
+    release_namespace: "{{ app_namespace }}"
+    create_namespace: true
+    name: jackett
+    state: present
+    chart_ref: jackett
+    chart_repo_url: https://halkeye.github.io/helm-charts/
+    chart_version: 0.1.3

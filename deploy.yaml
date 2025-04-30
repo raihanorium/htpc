@@ -12,3 +12,12 @@
     - role: jellyfin
       vars:
         task: install
+    - role: jellyseerr
+      vars:
+        task: install
+    - role: radarr
+      vars:
+        task: install
+    - role: jackett
+      vars:
+        task: install

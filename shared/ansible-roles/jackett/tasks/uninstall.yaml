@@ -1,0 +1,6 @@
+- name: Uninstall jackett
+  kubernetes.core.helm:
+    release_namespace: "{{ app_namespace }}"
+    name: jackett
+    state: absent
+    wait: true
