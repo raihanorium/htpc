@@ -1,26 +1,66 @@
-- name: Install radarr
-  kubernetes.core.helm:
-    release_namespace: "{{ app_namespace }}"
-    create_namespace: true
-    name: radarr
+- name: Deploy Radarr
+  kubernetes.core.k8s:
     state: present
-    chart_ref: radarr
-    chart_repo_url: https://charts.pree.dev
-    chart_version: 1.17.0
-    values:
-      service:
-        main:
-          type: LoadBalancer
-      persistence:
-        config:
-          enabled: true
-          mountPath: /config
-        media:
-          enabled: true
-          existingClaim: "{{ shared_pvc_name }}"
-          mountPath: /media-library
-          readOnly: false
-          accessMode: ReadWriteOnce
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: radarr
+        namespace: "{{ app_namespace }}"
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: radarr
+        template:
+          metadata:
+            labels:
+              app: radarr
+          spec:
+            containers:
+              - name: radarr
+                image: linuxserver/radarr
+                ports:
+                  - containerPort: 7878
+                env:
+                  - name: PUID
+                    value: "1000"
+                  - name: PGID
+                    value: "1000"
+                  - name: TZ
+                    value: "Asia/Dhaka"
+                volumeMounts:
+                  - name: config
+                    mountPath: /config
+                    subPath: radarr
+                  - name: media
+                    mountPath: /movies
+                    subPath: movies
+                  - name: media
+                    mountPath: /downloads
+            volumes:
+              - name: config
+                persistentVolumeClaim:
+                  claimName: "{{ config_pvc_name }}"
+              - name: media
+                persistentVolumeClaim:
+                  claimName: "{{ media_pvc_name }}"
+
+- name: Create Radarr Service
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: radarr
+        namespace: "{{ app_namespace }}"
+      spec:
+        selector:
+          app: radarr
+        ports:
+          - name: web
+            protocol: TCP
+            port: 7878
+            targetPort: 7878
+        type: LoadBalancer

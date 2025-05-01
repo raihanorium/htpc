@@ -1,12 +1,53 @@
-- name: Install jellyseerr
-  kubernetes.core.helm:
-    release_namespace: "{{ app_namespace }}"
-    create_namespace: true
-    name: jellyseerr
+- name: Deploy Jellyseerr
+  kubernetes.core.k8s:
     state: present
-    chart_ref: jellyseerr
-    chart_repo_url: https://bubylou.github.io/Arr-Stack
-    chart_version: 0.2.5
-    values:
-      service:
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: jellyseerr
+        namespace: "{{ app_namespace }}"
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: jellyseerr
+        template:
+          metadata:
+            labels:
+              app: jellyseerr
+          spec:
+            containers:
+              - name: jellyseerr
+                image: fallenbagel/jellyseerr
+                ports:
+                  - containerPort: 5055
+                env:
+                  - name: TZ
+                    value: "Asia/Dhaka"
+                volumeMounts:
+                  - name: config
+                    mountPath: /app/config
+                    subPath: jellyseerr
+            volumes:
+              - name: config
+                persistentVolumeClaim:
+                  claimName: "{{ config_pvc_name }}"
+
+- name: Create Jellyseerr service
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: jellyseerr
+        namespace: "{{ app_namespace }}"
+      spec:
+        selector:
+          app: jellyseerr
+        ports:
+          - protocol: TCP
+            port: 5055
+            targetPort: 5055
         type: LoadBalancer

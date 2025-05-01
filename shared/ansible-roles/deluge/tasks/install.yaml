@@ -1,23 +1,63 @@
-- name: Install Deluge
-  kubernetes.core.helm:
-    release_namespace: "{{ app_namespace }}"
-    create_namespace: true
-    name: deluge
+- name: Deploy Deluge
+  kubernetes.core.k8s:
     state: present
-    chart_ref: deluge
-    chart_repo_url: https://lib42.github.io/charts
-    chart_version: 1.3.0
-    values:
-      service:
-        main:
-          type: LoadBalancer
-      persistence:
-        config:
-          enabled: true
-          mountPath: /config
-          size: 10M
-        downloads:
-          enabled: true
-          type: pvc
-          existingClaim: "{{ shared_pvc_name }}"
-          mountPath: /downloads
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: deluge
+        namespace: "{{ app_namespace }}"
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: deluge
+        template:
+          metadata:
+            labels:
+              app: deluge
+          spec:
+            containers:
+              - name: deluge
+                image: linuxserver/deluge
+                ports:
+                  - containerPort: 8112
+                env:
+                  - name: PUID
+                    value: "1000"
+                  - name: PGID
+                    value: "1000"
+                  - name: TZ
+                    value: "Asia/Dhaka"
+                volumeMounts:
+                  - name: config
+                    mountPath: /config
+                    subPath: deluge
+                  - name: media
+                    mountPath: /downloads
+            volumes:
+              - name: config
+                persistentVolumeClaim:
+                  claimName: "{{ config_pvc_name }}"
+              - name: media
+                persistentVolumeClaim:
+                  claimName: "{{ media_pvc_name }}"
+
+- name: Create Deluge Service
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: deluge
+        namespace: "{{ app_namespace }}"
+      spec:
+        selector:
+          app: deluge
+        ports:
+          - protocol: TCP
+            port: 8112
+            targetPort: 8112
+            name: web
+        type: LoadBalancer

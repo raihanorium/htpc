@@ -1,6 +1,13 @@
-- name: Uninstall jackett
-  kubernetes.core.helm:
-    release_namespace: "{{ app_namespace }}"
-    name: jackett
+- name: Delete Jackett Deployment
+  kubernetes.core.k8s:
     state: absent
-    wait: true
+    kind: Deployment
+    name: jackett
+    namespace: "{{ app_namespace }}"
+
+- name: Delete Jackett Service
+  kubernetes.core.k8s:
+    state: absent
+    kind: Service
+    name: jackett
+    namespace: "{{ app_namespace }}"

@@ -1,6 +1,13 @@
-- name: Uninstall jellyseerr
-  kubernetes.core.helm:
-    release_namespace: "{{ app_namespace }}"
-    name: jellyseerr
+- name: Delete Jellyseerr Deployment
+  kubernetes.core.k8s:
     state: absent
-    wait: true
+    kind: Deployment
+    name: jellyseerr
+    namespace: "{{ app_namespace }}"
+
+- name: Delete Jellyseerr Service
+  kubernetes.core.k8s:
+    state: absent
+    kind: Service
+    name: jellyseerr
+    namespace: "{{ app_namespace }}"

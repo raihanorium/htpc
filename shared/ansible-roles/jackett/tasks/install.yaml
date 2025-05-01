@@ -1,9 +1,59 @@
-- name: Install jackett
-  kubernetes.core.helm:
-    release_namespace: "{{ app_namespace }}"
-    create_namespace: true
-    name: jackett
+- name: Deploy Jackett
+  kubernetes.core.k8s:
     state: present
-    chart_ref: jackett
-    chart_repo_url: https://halkeye.github.io/helm-charts/
-    chart_version: 0.1.3
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: jackett
+        namespace: "{{ app_namespace }}"
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: jackett
+        template:
+          metadata:
+            labels:
+              app: jackett
+          spec:
+            containers:
+              - name: jackett
+                image: linuxserver/jackett
+                ports:
+                  - containerPort: 9117
+                env:
+                  - name: PUID
+                    value: "1000"
+                  - name: PGID
+                    value: "1000"
+                  - name: TZ
+                    value: "Asia/Dhaka"
+                  - name: AUTO_UPDATE
+                    value: "false"
+                volumeMounts:
+                  - name: config
+                    mountPath: /config
+            volumes:
+              - name: config
+                persistentVolumeClaim:
+                  claimName: "{{ config_pvc_name }}"
+
+- name: Create Jackett Service
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: jackett
+        namespace: "{{ app_namespace }}"
+      spec:
+        selector:
+          app: jackett
+        ports:
+          - name: web
+            protocol: TCP
+            port: 9117
+            targetPort: 9117
+        type: LoadBalancer

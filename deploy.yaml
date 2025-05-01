@@ -2,10 +2,17 @@
   hosts: cluster_nodes
   vars:
     app_namespace: htpc
-    shared_pvc_name: htpc-shared-pvc
+    media_pvc_name: htpc-media
+    config_pvc_name: htpc-config
   roles:
     - role: volumes
     - role: helm
+    - role: jackett
+      vars:
+        task: install
+    - role: radarr
+      vars:
+        task: install
     - role: deluge
       vars:
         task: install
@@ -13,11 +20,5 @@
       vars:
         task: install
     - role: jellyseerr
-      vars:
-        task: install
-    - role: radarr
-      vars:
-        task: install
-    - role: jackett
       vars:
         task: install

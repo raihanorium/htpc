@@ -4,7 +4,7 @@
     kind: Namespace
     name: "{{ app_namespace }}"
 
-- name: Create PersistentVolume for shared PVC
+- name: Create PersistentVolume for media PVC
   kubernetes.core.k8s:
     state: present
     namespace: "{{ app_namespace }}"
@@ -12,7 +12,7 @@
       apiVersion: v1
       kind: PersistentVolume
       metadata:
-        name: "{{ shared_pvc_name }}-pv"
+        name: "{{ media_pvc_name }}-pv"
       spec:
         capacity:
           storage: 50Gi
@@ -21,9 +21,9 @@
         persistentVolumeReclaimPolicy: Retain
         storageClassName: local-path
         hostPath:
-          path: /home/raihan/media
+          path: /home/raihan/htpc-media
 
-- name: Create shared PVC for Deluge and Jellyfin
+- name: Create media PVC
   kubernetes.core.k8s:
     state: present
     namespace: "{{ app_namespace }}"
@@ -31,7 +31,7 @@
       apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-        name: "{{ shared_pvc_name }}"
+        name: "{{ media_pvc_name }}"
       spec:
         accessModes:
           - ReadWriteOnce
@@ -39,4 +39,41 @@
           requests:
             storage: 50Gi
         storageClassName: local-path
-        volumeName: "{{ shared_pvc_name }}-pv"
+        volumeName: "{{ media_pvc_name }}-pv"
+
+- name: Create PersistentVolume for config PVC
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ app_namespace }}"
+    definition:
+      apiVersion: v1
+      kind: PersistentVolume
+      metadata:
+        name: "{{ config_pvc_name }}-pv"
+      spec:
+        capacity:
+          storage: 1Gi
+        accessModes:
+          - ReadWriteOnce
+        persistentVolumeReclaimPolicy: Retain
+        storageClassName: local-path
+        hostPath:
+          path: /home/raihan/htpc-config
+
+- name: Create config PVC
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ app_namespace }}"
+    definition:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: "{{ config_pvc_name }}"
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: local-path
+        volumeName: "{{ config_pvc_name }}-pv"
