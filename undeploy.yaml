@@ -2,6 +2,7 @@
   hosts: cluster_nodes
   vars:
     app_namespace: htpc
+    k8s_delegate: localhost
   roles:
     - role: jackett
       vars:

@@ -16,7 +16,7 @@
         name: "{{ media_pvc_name }}-pv"
       spec:
         capacity:
-          storage: 50Gi
+          storage: 90Gi
         accessModes:
           - ReadWriteOnce
         persistentVolumeReclaimPolicy: Retain
@@ -39,7 +39,7 @@
           - ReadWriteOnce
         resources:
           requests:
-            storage: 50Gi
+            storage: 90Gi
         storageClassName: local-path
         volumeName: "{{ media_pvc_name }}-pv"
   delegate_to: "{{ k8s_delegate }}"
