@@ -3,7 +3,6 @@
   vars:
     app_namespace: htpc
   roles:
-    - role: helm
     - role: jackett
       vars:
         task: uninstall
@@ -25,3 +24,4 @@
         state: absent
         namespace: "{{ app_namespace }}"
         kind: Namespace
+      delegate_to: "{{ k8s_delegate }}"

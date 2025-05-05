@@ -4,6 +4,7 @@
     kind: Deployment
     name: jellyfin
     namespace: "{{ app_namespace }}"
+  delegate_to: "{{ k8s_delegate }}"
 
 - name: Delete Jellyfin Service
   kubernetes.core.k8s:
@@ -11,3 +12,4 @@
     kind: Service
     name: jellyfin
     namespace: "{{ app_namespace }}"
+  delegate_to: "{{ k8s_delegate }}"

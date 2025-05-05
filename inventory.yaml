@@ -1,5 +1,5 @@
 cluster_nodes:
   hosts:
     server1:
-      ansible_host: server
+      ansible_host: home
       ansible_python_interpreter: /usr/bin/python3

@@ -4,6 +4,7 @@
     kind: Deployment
     name: deluge
     namespace: "{{ app_namespace }}"
+  delegate_to: "{{ k8s_delegate }}"
 
 - name: Delete Deluge Service
   kubernetes.core.k8s:
@@ -11,3 +12,4 @@
     kind: Service
     name: deluge
     namespace: "{{ app_namespace }}"
+  delegate_to: "{{ k8s_delegate }}"

@@ -4,9 +4,9 @@
     app_namespace: htpc
     media_pvc_name: htpc-media
     config_pvc_name: htpc-config
+    k8s_delegate: localhost
   roles:
     - role: volumes
-    - role: helm
     - role: jackett
       vars:
         task: install

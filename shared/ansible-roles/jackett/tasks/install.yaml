@@ -38,6 +38,7 @@
               - name: config
                 persistentVolumeClaim:
                   claimName: "{{ config_pvc_name }}"
+  delegate_to: "{{ k8s_delegate }}"
 
 - name: Create Jackett Service
   kubernetes.core.k8s:
@@ -57,3 +58,4 @@
             port: 9117
             targetPort: 9117
         type: LoadBalancer
+  delegate_to: "{{ k8s_delegate }}"

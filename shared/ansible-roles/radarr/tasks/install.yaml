@@ -45,6 +45,7 @@
               - name: media
                 persistentVolumeClaim:
                   claimName: "{{ media_pvc_name }}"
+  delegate_to: "{{ k8s_delegate }}"
 
 - name: Create Radarr Service
   kubernetes.core.k8s:
@@ -64,3 +65,4 @@
             port: 7878
             targetPort: 7878
         type: LoadBalancer
+  delegate_to: "{{ k8s_delegate }}"

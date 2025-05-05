@@ -33,6 +33,7 @@
               - name: config
                 persistentVolumeClaim:
                   claimName: "{{ config_pvc_name }}"
+  delegate_to: "{{ k8s_delegate }}"
 
 - name: Create Jellyseerr service
   kubernetes.core.k8s:
@@ -51,3 +52,4 @@
             port: 5055
             targetPort: 5055
         type: LoadBalancer
+  delegate_to: "{{ k8s_delegate }}"

@@ -42,6 +42,7 @@
               - name: media
                 persistentVolumeClaim:
                   claimName: "{{ media_pvc_name }}"
+  delegate_to: "{{ k8s_delegate }}"
 
 - name: Create Deluge Service
   kubernetes.core.k8s:
@@ -61,3 +62,4 @@
             targetPort: 8112
             name: web
         type: LoadBalancer
+  delegate_to: "{{ k8s_delegate }}"

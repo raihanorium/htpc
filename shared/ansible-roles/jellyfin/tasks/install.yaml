@@ -42,6 +42,7 @@
               - name: media
                 persistentVolumeClaim:
                   claimName: "{{ media_pvc_name }}"
+  delegate_to: "{{ k8s_delegate }}"
 
 - name: Create Jellyfin Service
   kubernetes.core.k8s:
@@ -60,3 +61,4 @@
             port: 8096
             targetPort: 8096
         type: LoadBalancer
+  delegate_to: "{{ k8s_delegate }}"
