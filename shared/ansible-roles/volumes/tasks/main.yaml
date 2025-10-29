@@ -22,7 +22,7 @@
         persistentVolumeReclaimPolicy: Retain
         storageClassName: local-path
         hostPath:
-          path: /home/raihan/htpc-media
+          path: /mnt/media
   delegate_to: "{{ k8s_delegate }}"
 
 - name: Create media PVC
