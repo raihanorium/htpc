@@ -1,7 +1,21 @@
-1. Install k3sup
-2. Install Kubernetes cluster using k3sup
-   `k3sup install --local`
-3. Install python3, python3-pip, python3-kubernetes
-    `sudo snap install python3-pip`
-4. Install ansible
-5. Run `ansible-playbook deploy.yaml`
+# Create cluster
+
+1. Install Terraform, Ansible
+2. Create cluster
+   Run
+   ```
+   cd ./terraform
+   terraform apply
+   ```
+3. Destroy cluster
+   Run
+   `terraform destroy`
+4. Deploy apps
+   Run
+   ```
+   cd ./ansible
+   ansible-playbook playbooks/deploy.yaml
+   ```
+5. Undeploy apps
+   Run
+   `ansible-playbook playbooks/undeploy.yaml`

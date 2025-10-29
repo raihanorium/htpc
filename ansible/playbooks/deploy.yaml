@@ -1,5 +1,5 @@
 - name: Install HTPC apps
-  hosts: cluster_nodes
+  hosts: local
   vars:
     app_namespace: htpc
     media_pvc_name: htpc-media

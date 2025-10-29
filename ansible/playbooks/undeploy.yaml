@@ -1,5 +1,5 @@
 - name: Uninstall HTPC apps
-  hosts: cluster_nodes
+  hosts: local
   vars:
     app_namespace: htpc
     k8s_delegate: localhost
