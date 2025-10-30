@@ -1,0 +1,15 @@
+- name: Delete Sonarr Deployment
+  kubernetes.core.k8s:
+    state: absent
+    kind: Deployment
+    name: sonarr
+    namespace: "{{ app_namespace }}"
+  delegate_to: "{{ k8s_delegate }}"
+
+- name: Delete Sonarr Service
+  kubernetes.core.k8s:
+    state: absent
+    kind: Service
+    name: sonarr
+    namespace: "{{ app_namespace }}"
+  delegate_to: "{{ k8s_delegate }}"

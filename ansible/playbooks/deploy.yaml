@@ -1,24 +1,34 @@
 - name: Install HTPC apps
   hosts: local
   vars:
+    app_timezone: "Asia/Dhaka"
     app_namespace: htpc
     media_pvc_name: htpc-media
+    media_storage_size: 90Gi
+    media_storage_path: "/mnt/media"
     config_pvc_name: htpc-config
+    config_storage_size: 1Gi
+    config_storage_path: "/home/raihan/htpc-config2"
     k8s_delegate: localhost
   roles:
     - role: volumes
+      vars:
+        task: install
+    - role: deluge
+      vars:
+        task: install
     - role: jackett
       vars:
         task: install
     - role: radarr
       vars:
         task: install
-    - role: deluge
-      vars:
-        task: install
-    - role: jellyfin
+    - role: sonarr
       vars:
         task: install
     - role: jellyseerr
+      vars:
+        task: install
+    - role: jellyfin
       vars:
         task: install

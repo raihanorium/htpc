@@ -1,0 +1,82 @@
+- name: Ensure HTPC namespace exists
+  kubernetes.core.k8s:
+    state: present
+    kind: Namespace
+    name: "{{ app_namespace }}"
+  delegate_to: "{{ k8s_delegate }}"
+
+- name: Create PersistentVolume for media PVC
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: PersistentVolume
+      metadata:
+        name: "{{ media_pvc_name }}-pv"
+      spec:
+        capacity:
+          storage: "{{ media_storage_size }}"
+        accessModes:
+          - ReadWriteOnce
+        persistentVolumeReclaimPolicy: Retain
+        storageClassName: local-path
+        hostPath:
+          path: "{{ media_storage_path }}"
+  delegate_to: "{{ k8s_delegate }}"
+
+- name: Create media PVC
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ app_namespace }}"
+    definition:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: "{{ media_pvc_name }}"
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: "{{ media_storage_size }}"
+        storageClassName: local-path
+        volumeName: "{{ media_pvc_name }}-pv"
+  delegate_to: "{{ k8s_delegate }}"
+
+- name: Create PersistentVolume for config PVC
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: PersistentVolume
+      metadata:
+        name: "{{ config_pvc_name }}-pv"
+      spec:
+        capacity:
+          storage: "{{ config_storage_size }}"
+        accessModes:
+          - ReadWriteOnce
+        persistentVolumeReclaimPolicy: Retain
+        storageClassName: local-path
+        hostPath:
+          path: "{{ config_storage_path }}"
+  delegate_to: "{{ k8s_delegate }}"
+
+- name: Create config PVC
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ app_namespace }}"
+    definition:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: "{{ config_pvc_name }}"
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: "{{ config_storage_size }}"
+        storageClassName: local-path
+        volumeName: "{{ config_pvc_name }}-pv"
+  delegate_to: "{{ k8s_delegate }}"

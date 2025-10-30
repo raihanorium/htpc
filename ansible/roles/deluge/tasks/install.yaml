@@ -19,7 +19,7 @@
           spec:
             containers:
               - name: deluge
-                image: linuxserver/deluge
+                image: linuxserver/deluge:2.2.0
                 ports:
                   - containerPort: 8112
                 env:
@@ -28,13 +28,13 @@
                   - name: PGID
                     value: "1000"
                   - name: TZ
-                    value: "Asia/Dhaka"
+                    value: "{{ app_timezone }}"
                 volumeMounts:
                   - name: config
                     mountPath: /config
                     subPath: deluge
                   - name: media
-                    mountPath: /downloads
+                    mountPath: /media
             volumes:
               - name: config
                 persistentVolumeClaim:

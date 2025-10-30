@@ -1,0 +1,29 @@
+- name: Delete media PVC
+  kubernetes.core.k8s:
+    state: absent
+    kind: PersistentVolumeClaim
+    name: "{{ media_pvc_name }}"
+    namespace: "{{ app_namespace }}"
+  delegate_to: "{{ k8s_delegate }}"
+
+- name: Delete media PV
+  kubernetes.core.k8s:
+    state: absent
+    kind: PersistentVolume
+    name: "{{ media_pvc_name }}-pv"
+  delegate_to: "{{ k8s_delegate }}"
+
+- name: Delete config PVC
+  kubernetes.core.k8s:
+    state: absent
+    kind: PersistentVolumeClaim
+    name: "{{ config_pvc_name }}"
+    namespace: "{{ app_namespace }}"
+  delegate_to: "{{ k8s_delegate }}"
+
+- name: Delete config PV
+  kubernetes.core.k8s:
+    state: absent
+    kind: PersistentVolume
+    name: "{{ config_pvc_name }}-pv"
+  delegate_to: "{{ k8s_delegate }}"

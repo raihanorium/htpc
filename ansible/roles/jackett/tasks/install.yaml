@@ -19,7 +19,7 @@
           spec:
             containers:
               - name: jackett
-                image: linuxserver/jackett
+                image: linuxserver/jackett:0.24.222
                 ports:
                   - containerPort: 9117
                 env:
@@ -28,7 +28,7 @@
                   - name: PGID
                     value: "1000"
                   - name: TZ
-                    value: "Asia/Dhaka"
+                    value: "{{ app_timezone }}"
                   - name: AUTO_UPDATE
                     value: "false"
                 volumeMounts:

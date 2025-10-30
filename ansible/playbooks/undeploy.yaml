@@ -2,27 +2,36 @@
   hosts: local
   vars:
     app_namespace: htpc
+    media_pvc_name: htpc-media
+    config_pvc_name: htpc-config
     k8s_delegate: localhost
   roles:
+    - role: deluge
+      vars:
+        task: uninstall
     - role: jackett
       vars:
         task: uninstall
     - role: radarr
       vars:
         task: uninstall
-    - role: deluge
-      vars:
-        task: uninstall
-    - role: jellyfin
+    - role: sonarr
       vars:
         task: uninstall
     - role: jellyseerr
       vars:
         task: uninstall
+    - role: jellyfin
+      vars:
+        task: uninstall
+    - role: volumes
+      vars:
+        task: uninstall
   tasks:
     - name: Delete HTPC namespace
       kubernetes.core.k8s:
-        state: absent
-        namespace: "{{ app_namespace }}"
+        api_version: v1
         kind: Namespace
+        name: "{{ app_namespace }}"
+        state: absent
       delegate_to: "{{ k8s_delegate }}"

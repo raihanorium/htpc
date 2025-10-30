@@ -1,55 +1,68 @@
-- name: Deploy Jellyseerr
+- name: Deploy Sonarr
   kubernetes.core.k8s:
     state: present
     definition:
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: jellyseerr
+        name: sonarr
         namespace: "{{ app_namespace }}"
       spec:
         replicas: 1
         selector:
           matchLabels:
-            app: jellyseerr
+            app: sonarr
         template:
           metadata:
             labels:
-              app: jellyseerr
+              app: sonarr
           spec:
             containers:
-              - name: jellyseerr
-                image: fallenbagel/jellyseerr:sha-42eec24
+              - name: sonarr
+                image: linuxserver/sonarr:4.0.16-develop
                 ports:
-                  - containerPort: 5055
+                  - containerPort: 8989
                 env:
+                  - name: PUID
+                    value: "1000"
+                  - name: PGID
+                    value: "1000"
                   - name: TZ
                     value: "{{ app_timezone }}"
                 volumeMounts:
                   - name: config
-                    mountPath: /app/config
-                    subPath: jellyseerr
+                    mountPath: /config
+                    subPath: sonarr
+                  - name: media
+                    mountPath: /movies
+                    subPath: movies
+                  - name: media
+                    mountPath: /downloads
             volumes:
               - name: config
                 persistentVolumeClaim:
                   claimName: "{{ config_pvc_name }}"
+              - name: media
+                persistentVolumeClaim:
+                  claimName: "{{ media_pvc_name }}"
   delegate_to: "{{ k8s_delegate }}"
 
-- name: Create Jellyseerr service
+- name: Create Sonarr Service
   kubernetes.core.k8s:
     state: present
     definition:
       apiVersion: v1
       kind: Service
       metadata:
-        name: jellyseerr
+        name: sonarr
         namespace: "{{ app_namespace }}"
       spec:
         selector:
-          app: jellyseerr
+          app: sonarr
         ports:
-          - protocol: TCP
-            port: 5055
-            targetPort: 5055
+          - name: web
+            protocol: TCP
+            port: 8989
+            targetPort: 8989
         type: LoadBalancer
   delegate_to: "{{ k8s_delegate }}"
