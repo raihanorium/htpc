@@ -19,7 +19,7 @@
           spec:
             containers:
               - name: radarr
-                image: linuxserver/radarr:6.0.4-nightly
+                image: linuxserver/radarr:5.28.0.10274-ls286
                 ports:
                   - containerPort: 7878
                 env:
