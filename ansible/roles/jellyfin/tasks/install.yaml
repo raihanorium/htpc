@@ -34,7 +34,7 @@
                     mountPath: /config
                     subPath: jellyfin
                   - name: media
-                    mountPath: /data
+                    mountPath: /media-library
             volumes:
               - name: config
                 persistentVolumeClaim:

@@ -34,6 +34,7 @@
                 volumeMounts:
                   - name: config
                     mountPath: /config
+                    subPath: jackett
             volumes:
               - name: config
                 persistentVolumeClaim:

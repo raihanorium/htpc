@@ -34,7 +34,7 @@
                     mountPath: /config
                     subPath: deluge
                   - name: media
-                    mountPath: /media
+                    mountPath: /media-library
             volumes:
               - name: config
                 persistentVolumeClaim:
