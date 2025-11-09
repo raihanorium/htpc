@@ -1,0 +1,62 @@
+- name: Deploy Organizr
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: organizr
+        namespace: "{{ app_namespace }}"
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: organizr
+        template:
+          metadata:
+            labels:
+              app: organizr
+          spec:
+            containers:
+              - name: organizr
+                image: ghcr.io/organizr/organizr
+                ports:
+                  - containerPort: 80
+                env:
+                  - name: PUID
+                    value: "1000"
+                  - name: PGID
+                    value: "1000"
+                  - name: TZ
+                    value: "{{ app_timezone }}"
+                  - name: SECRET_ENCRYPTION_KEY
+                    value: "f43fb7fcc1ad64b88360b820c997c9a45c6af89add0770be1fefbf8375068530"
+                volumeMounts:
+                  - name: config
+                    mountPath: /config
+                    subPath: organizr
+            volumes:
+              - name: config
+                persistentVolumeClaim:
+                  claimName: "{{ config_pvc_name }}"
+  delegate_to: "{{ k8s_delegate }}"
+
+- name: Create Organizr Service
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: organizr
+        namespace: "{{ app_namespace }}"
+      spec:
+        selector:
+          app: organizr
+        ports:
+          - protocol: TCP
+            port: 7575
+            targetPort: 80
+            name: web
+        type: LoadBalancer
+  delegate_to: "{{ k8s_delegate }}"

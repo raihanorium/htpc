@@ -32,3 +32,6 @@
     - role: jellyfin
       vars:
         task: install
+    - role: organizr
+      vars:
+        task: install

@@ -1,0 +1,15 @@
+- name: Delete Organizr Deployment
+  kubernetes.core.k8s:
+    state: absent
+    kind: Deployment
+    name: organizr
+    namespace: "{{ app_namespace }}"
+  delegate_to: "{{ k8s_delegate }}"
+
+- name: Delete Organizr Service
+  kubernetes.core.k8s:
+    state: absent
+    kind: Service
+    name: organizr
+    namespace: "{{ app_namespace }}"
+  delegate_to: "{{ k8s_delegate }}"

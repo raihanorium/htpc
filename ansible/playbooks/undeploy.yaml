@@ -24,6 +24,9 @@
     - role: jellyfin
       vars:
         task: uninstall
+    - role: organizr
+      vars:
+        task: uninstall
     - role: volumes
       vars:
         task: uninstall
